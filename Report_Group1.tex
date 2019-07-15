@@ -1,179 +1,294 @@
-\documentclass{article}
+%------------------------------------
+% DIPLOMARBEIT: Hauptdatei Dokument
+% Version 1.2
+%     
+% Stefan Grünwald (2000 - 2007)
+% Michael Fladischer (2012-2014)
+%
+% Das Dokument lässt sich am besten mit "latexmk" bauen:
+% http://www.phys.psu.edu/~collins/software/latexmk-jcc/
+%
+% Die genutzten LaTeX-Packages sind alle Bestandteil der TeXlive Distribution die mit Debian (Squeeze) ausgeliefert wird.
+% Für eine bequeme Installation unter Debian genügt es, folgende Zeile als "root" auszuführen:
+%
+% aptitude install -R latexmk texlive-base texlive-bibtex-extra texlive-binaries texlive-common texlive-fonts-extra texlive-fonts-recommended \
+%  texlive-formats-extra texlive-generic-extra texlive-generic-recommended texlive-humanities texlive-lang-german texlive-latex-base texlive-latex-extra \
+%  texlive-latex-recommended texlive-latex3 texlive-math-extra texlive-pictures texlive-plain-extra texlive-pstricks texlive-publishers texlive-science \
+%  latex-beamer
+%
+% Alle .tex Dateien sind für den vim Editor ausgelegt und enthalten Modeline-Anweisungen zur besseren Darstellung.
+% 
+% Patches zur Verbesserung von Fehlern, zur Optimierung oder für neue Features können gerne an <michael@fladi.at> geschickt werden.
+%------------------------------------
+
+% Dokumentenklasse %{{{
+\documentclass[
+    %DIV12,                                 % Satzspiegelparameter 12
+    %BCOR8mm,                               % Bindekorrektur 8mm
+    %headinclude,                           % Berücksichtigung der Kopfzeile
+                                            % bei der Ermittlung des Satzspiegels
+    12pt,                                   % Schriftgrösse 12pt
+    a4paper,                                % DIN A4
+    captions=oneline,                       % 
+    ngerman,
+    bibliography=totoc,                     % Literaturverzeichniss automatisch im TOC einbinden
+    listof=totoc,                           % Listen automatisch in TOC einbinden
+    index=totoc]                            % Index automatisch in TOC einbinden
+    {scrreprt}                              % KOMA-Script für Reports
+%}}}
+
+% Generische Packages %{{{
+\usepackage[ngerman]{babel}
+\usepackage[ngerman]{translator}
+\usepackage[utf8]{inputenc}                 % Laden der UTF8-Eingabekodierung
+                                            % ACHTUNG: Dateien müssen UTF8 codiert sein!
+\usepackage[T1]{fontenc}                    % EC codierte Fonts
+\usepackage{ae}                             % PDF encoding Info
+\usepackage{palatino}                       % Brotschrift: Palationo
+\usepackage{helvet}                         % Serifenlose Schrift: Helvetica
+\usepackage[left]{eurosym}                  % EURO links
+\usepackage{paralist}                       % Beeinflussung von Listen
+\usepackage{tabularx}                       % Austreiben auf eine bestimmte Breite
+\usepackage{longtable}                      % Mehrseitige Tabellen
+\usepackage{ltxtable}                       % 'longtable' und 'tabularx'
+\usepackage{array}                          % Zeilenumbruch in 'p'-Spalten
+\usepackage{multirow}                       % Multiple Zeilen/Spalten in Tabellen
+% http://www.ctan.org/tex-archive/macros/latex/contrib/booktabs/
+% \toprule, \midrule und \bottomrule
+\usepackage{booktabs}
+% http://www.ctan.org/tex-archive/macros/latex/required/tools/
+\usepackage{dcolumn}
+% http://www.ctan.org/tex-archive/macros/latex/contrib/blindtext/
+% Erzeugt Blindtext welcher beim Prüfen des Layouts behilflich sein kann
+\usepackage{blindtext}
+% http://ctan.org/tex-archive/macros/latex/contrib/siunitx/
+\usepackage{siunitx}
+% http://www.ctan.org/tex-archive/macros/latex/required/graphics/
+\usepackage{color}
+% http://www.ctan.org/tex-archive/macros/latex/contrib/xcolor/
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+% http://www.ctan.org/tex-archive/macros/latex/contrib/wasysym/
+%\usepackage{wasysym}
+% http://www.ctan.org/tex-archive/macros/latex/contrib/url/
+\usepackage[hyphens]{url}
+% http://www.ctan.org/tex-archive/macros/latex/contrib/mdwtools/
+\usepackage{mdwlist}
+% http://www.ctan.org/tex-archive/macros/latex/contrib/csquotes/
+\usepackage{csquotes}
+\usepackage{footnote}
+\usepackage{footmisc}
+\usepackage{gensymb}
+\usepackage{subfigure}
+\usepackage{wrapfig}
+\usepackage{amsmath,amsthm,amssymb}
+%\usepackage[geometry]{ifsym}
+\usepackage{scrhack}
+%}}}
+
+% Lokale Einstellungen %{{{
+\input{./settings}
+%}}}
+
+% Weiche für PDF/DVI %{{{
+% http://www.ctan.org/tex-archive/macros/latex/contrib/oberdiek/
+% Bitmaps stinken ja in der Druckstufe sowieso, besser TIKZ benutzen :-)
+% für Encapsulated-Postscript und PDFTeX Grafiken
+
+\usepackage[pdftex]{graphicx}
+\graphicspath{}
+\pdfcompresslevel=9
+\usepackage{rotating}
+%}}}
+
+% Überschriften und Zeilenabstand %{{{
+% http://www.ctan.org/tex-archive/macros/latex/required/tools/
+\usepackage{rotating}
+\usepackage{layout}
+
+% http://www.ctan.org/tex-archive/macros/latex/contrib/caption/
+% Überschriften formatieren
+\usepackage[font=small,format=hang,labelfont=bf]{caption}
+
+\renewcommand{\floatpagefraction}{.8}       % ,float page`, wenn diese mindestens
+                                            % 80% der Seite einnehmen
+                                            % default: .5
+\renewcommand{\textfraction}{.1}            % neben den Abbildungen, die ,h`ere, ,t`op und
+                                            % ,b`ottom plaziert werden, noch min. 10% Text
+                                            % default: .2
+\renewcommand{\topfraction}{.9}             % max. Anteil der Seite, die f\"{u}r Abbildungen,
+                                            % die ,t`op plaziert werden, verwendet wird
+                                            % default: .7
+\renewcommand{\bottomfraction}{.6}          % max. Anteil der Seite, die f\"{u}r Abbildungen,
+                                            % die ,b`ottom plaziert werden, verwendet wird
+                                            % default: .3
+%}}}
+
+% Index-Erstellung %{{{
+\usepackage{makeidx}
+\makeindex
+%}}}
+
+% PDF- und Hyperlink-Einstellungen %{{{
+% http://www.ctan.org/tex-archive/macros/latex/contrib/hyperref/
+\usepackage[plainpages=false,
+            pdfpagelabels,
+            pdftitle={\campusTitle},
+            pdfsubject={\campusType, \campusDate, \campusSubject},
+            pdfkeywords={\campusKeywords},
+            bookmarks=true,                 % Lesezeichen im 'pdf' analog zum Inhaltsverzeichnis,
+            bookmarksopen=true,             % Bookmarks anzeigen...
+            bookmarksnumbered=true,         % ...und nummerieren
+            hyperindex=true,                % Indexeinträge als Hyperlinks
+            colorlinks=false,               % Farbige Links
+            linkcolor=black,
+            urlcolor=black,
+            citecolor=black,
+            unicode=true,
+            breaklinks,
+            verbose
+]{hyperref}
+% http://www.ctan.org/tex-archive/macros/latex/contrib/breakurl/
+% Allow links to have line-breaks even when processed by dvips/ps2pdf.
+%\usepackage[hyphenbreaks]{breakurl}
+%}}}
+
+% Layout-Einstellungen %{{{
+
+% Numerierungstiefe der Kapitel
+\setcounter{secnumdepth}{3}%
+
+% Numerierungstiefe des Inhaltsverzeichnisses
+\setcounter{tocdepth}{3}%
+
+% Abstand vor und nach Gleitobjekten im Text [h]
+%\setlength{\intextsep}{12pt plus 2pt minus 2pt}    % default: {12pt plus 2pt minus 2pt}
+
+% Abstand zwischen Gleitobjekten oben oder unten und Text [tb]
+\setlength{\textfloatsep}{28pt plus 2pt minus 4pt}  % default: {20pt plus 2pt minus 4pt}
 
 
-\usepackage{arxiv}
+%%%---- PARAGRAPH ---------------------
+\makeatletter
+\renewcommand{\paragraph}{%
+  \@startsection {paragraph}{4}{\z@}%
+  {-3.25ex plus-1ex minus-.2ex}{1sp}%
+  {\raggedsection \normalfont \sectfont \nobreak \size@paragraph \nobreak } % was: \reset@font \normalsize\bf
+} \makeatother
 
-\usepackage[utf8]{inputenc} % allow utf-8 input
-\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
-\usepackage{hyperref}       % hyperlinks
-\usepackage{url}            % simple URL typesetting
-\usepackage{booktabs}       % professional-quality tables
-\usepackage{amsfonts}       % blackboard math symbols
-\usepackage{nicefrac}       % compact symbols for 1/2, etc.
-\usepackage{microtype}      % microtypography
-\usepackage{lipsum}
+%%%---- SUBPARAGRAPH ------------------
+\makeatletter
+\renewcommand{\subparagraph}{%
+  \@startsection {subparagraph}{5}{\parindent}%
+  {3.25ex \@plus 1ex \@minus .2ex}{-1em}%
+  {\raggedsection \normalfont \sectfont \nobreak \normalsize\bf \nobreak } % was: \size@subparagraph
+} \makeatother
 
-\title{A template for the \emph{arxiv} style}
+\clubpenalty = 10000
+\widowpenalty = 10000
 
+%%%------------------------------------
+%%%---- SEITENDEKLARATION -------------
+%%%------------------------------------
+\setlength{\textheight}{660pt}%
+\setlength{\voffset}{40pt}%
+\setlength{\hoffset}{20pt}%
+%\setlength{\footskip}{20pt}%
+%}}}
 
-\author{
-  David S.~Hippocampus\thanks{Use footnote for providing further
-    information about author (webpage, alternative
-    address)---\emph{not} for acknowledging funding agencies.} \\
-  Department of Computer Science\\
-  Cranberry-Lemon University\\
-  Pittsburgh, PA 15213 \\
-  \texttt{hippo@cs.cranberry-lemon.edu} \\
-  %% examples of more authors
-   \And
- Elias D.~Striatum \\
-  Department of Electrical Engineering\\
-  Mount-Sheikh University\\
-  Santa Narimana, Levand \\
-  \texttt{stariate@ee.mount-sheikh.edu} \\
-  %% \AND
-  %% Coauthor \\
-  %% Affiliation \\
-  %% Address \\
-  %% \texttt{email} \\
-  %% \And
-  %% Coauthor \\
-  %% Affiliation \\
-  %% Address \\
-  %% \texttt{email} \\
-  %% \And
-  %% Coauthor \\
-  %% Affiliation \\
-  %% Address \\
-  %% \texttt{email} \\
-}
+% Kopf- und Fußzeilen %{{{
+% http://www.ctan.org/tex-archive/macros/latex/contrib/fancyhdr/
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+% Redefine fetching of chapter name
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
+% Page header
+\lhead{}
+\chead{}
+\rhead{\small\leftmark}
+% Page footer
+\lfoot{}
+\cfoot{\small\thepage}
+\rfoot{}
+%}}}
+
+% Smarte Referenzen %{{{
+% http://www.ctan.org/tex-archive/macros/latex/contrib/fancyref/
+\usepackage[german]{cleveref}
+\usepackage{nameref}
+%}}}
+
+% Haupt-Dokument %{{{
 
 \begin{document}
-\maketitle
 
-\begin{abstract}
-\lipsum[1]
-\end{abstract}
-
-
-% keywords can be removed
-\keywords{First keyword \and Second keyword \and More}
-
-
-\section{Introduction}
-\lipsum[2]
-\lipsum[3]
-
-
-\section{Headings: first level}
-\label{sec:headings}
-
-\lipsum[4] See Section \ref{sec:headings}.
-
-\subsection{Headings: second level}
-\lipsum[5]
-\begin{equation}
-\xi _{ij}(t)=P(x_{t}=i,x_{t+1}=j|y,v,w;\theta)= {\frac {\alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}{\sum _{i=1}^{N} \sum _{j=1}^{N} \alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}}
-\end{equation}
-
-\subsubsection{Headings: third level}
-\lipsum[6]
-
-\paragraph{Paragraph}
-\lipsum[7]
-
-\section{Examples of citations, figures, tables, references}
-\label{sec:others}
-\lipsum[8] \cite{kour2014real,kour2014fast} and see \cite{hadash2018estimate}.
-
-The documentation for \verb+natbib+ may be found at
+% Titelseite
+\begin{titlepage}
 \begin{center}
-  \url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-Of note is the command \verb+\citet+, which produces citations
-appropriate for use in inline text.  For example,
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-produces
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
+\huge \campusType \\
 
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
+\vspace{2cm}%
 
+\campusTitle \\
+\vspace{3cm}%
 
-\subsection{Figures}
-\lipsum[10] 
-See Figure \ref{fig:fig1}. Here is how you add footnotes. \footnote{Sample of the first footnote.}
-\lipsum[11] 
+\begin{normalsize}
 
-\begin{figure}
-  \centering
-  \fbox{\rule[-.5cm]{4cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
-  \label{fig:fig1}
+ausgeführt am
+
+\begin{figure} [h!]
+    \centerline{\includegraphics[width=0.5\textwidth]{Campus02_Logo}}
 \end{figure}
 
-\subsection{Tables}
-\lipsum[12]
-See awesome Table~\ref{tab:table}.
+%\vspace{4.5cm}%
 
-\begin{table}
- \caption{Sample table title}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule(r){1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-  \label{tab:table}
-\end{table}
+Studiengang\\ 
+Informationstechnologien und Wirtschaftsinformatik\\
 
-\subsection{Lists}
-\begin{itemize}
-\item Lorem ipsum dolor sit amet
-\item consectetur adipiscing elit. 
-\item Aliquam dignissim blandit est, in dictum tortor gravida eget. In ac rutrum magna.
-\end{itemize}
+\vspace{3.5cm}%
 
+%\begin{tabularx}{\linewidth}{ll}
+\textbf{Gruppe 1}\\
+\campusAuthor \\
+%\end{tabularx}
 
-\bibliographystyle{unsrt}  
-%\bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
-%%% and comment out the ``thebibliography'' section.
+\vspace{3.5cm}%
+\end{normalsize}
+\end{center}
 
+\end{titlepage}
 
-%%% Comment out this section when you \bibliography{references} is enabled.
-\begin{thebibliography}{1}
+% Ende der Titelseite
+\newpage
 
-\bibitem{kour2014real}
-George Kour and Raid Saabne.
-\newblock Real-time segmentation of on-line handwritten arabic script.
-\newblock In {\em Frontiers in Handwriting Recognition (ICFHR), 2014 14th
-  International Conference on}, pages 417--422. IEEE, 2014.
+% Seitennummerierung auf Römisch setzen und bei Seite 1 beginnen
+\pagenumbering{roman}
+\setcounter{page}{1}
 
-\bibitem{kour2014fast}
-George Kour and Raid Saabne.
-\newblock Fast classification of handwritten on-line arabic characters.
-\newblock In {\em Soft Computing and Pattern Recognition (SoCPaR), 2014 6th
-  International Conference of}, pages 312--318. IEEE, 2014.
+\setlength{\parindent}{0em}
 
-\bibitem{hadash2018estimate}
-Guy Hadash, Einat Kermany, Boaz Carmeli, Ofer Lavi, George Kour, and Alon
-  Jacovi.
-\newblock Estimate and replace: A novel approach to integrating deep neural
-  networks with existing applications.
-\newblock {\em arXiv preprint arXiv:1804.09028}, 2018.
+% Inhaltsverzeichnis
+\tableofcontents
 
-\end{thebibliography}
+% Hauptteil
+\setlength{\parskip}{3ex plus0.5ex minus0.5ex}
 
+% Seitennummerierung auf Arabisch setzen und bei Seite 1 beginnen
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% Laden des eigentlichen Inhalts
+\input{./content/01_part1}
+\input{./content/02_part2}
+
+% Index
+\clearpage
+\printindex
 
 \end{document}
+%}}}
+
+% vim:filetype=tex foldmethod=marker autoindent expandtab shiftwidth=4 tw=160:
+% Local variables:
+% mode: latex
+% End:              
