@@ -1,0 +1,17 @@
+% vim: set tw=160:
+
+\chapter{What kinds of information does Table VI give us?}
+This table contains information on computer use, achievement test scores, and school performance for individuals. This data was taken from high school sophomores or seniors in 1980. In 1984 the survey asked about earnings and work experience. Column 1 reports the difference in the mean log wage rate in 1984 for workers who have used a computer at work and those who have not. In column 2 there are several demographic variables combined, in column 3 the attended high school and in column 4 the self-reported high school grade is added. In the table, there is information about the change in the wage structure. This is done with the OLS (ordinary least square) method with a wage regression of using the high school and beyond the survey. It is not clear if the data in the table are log-transformed. However, there is in the headline of the table a log. It is also unclear if the independent or the dependent variable is log-transformed. The whole sample consists of workers with exactly a high school education. 
+
+
+\section{ How to interpret them?} 
+The data says that if someone mentions that he or she uses a computer at work will earn on average 0.19 log points more, with a standard deviation of 0.39.
+The computer (log) for people who are using a computer at home is by 0.2 log points higher than for people who are not using a computer at home.
+In this table the data are log-transformed. That means that a coefficient of the computer at work has to be interpreted as  (exp(0.19)-1)*100 = 20.925 percent. This means that a person who is using a computer at work earns (average) more than 20 percent than someone without a computer at work. 
+
+\section{How do you evaluate these estimates?}
+The R^2 measurement for the different models shows how much of the variance can be explained by the regression. In this case, not a single column shows a higher R^2 than 9.9 percent. If this is low or high can not be said without a deeper understanding of the subject or insights. 
+
+\section{What are your main concerns from a statistical point of view?}
+The variable "used computer at work" is a very undefined word. This means that it is more a subjective sight from each person which was tested. This should be got more defined. 
+There are lots of data from different years mixed in the survey and table. Most of the data are from 1980 - 1984. So, the period is quite small. 
